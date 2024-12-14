@@ -4,7 +4,16 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'pip install pipenv' // Ensure pipenv is installed
+               // Ensure Python and pip are available
+                sh 'python3 --version || sudo apt-get update && sudo apt-get install -y python3 python3-pip'
+
+                // Install pipenv
+                sh 'pip install --user pipenv'
+
+                // Remove old virtual environment if it exists
+                sh 'pipenv --rm || true'
+
+                // Sync dependencies
                 sh 'pipenv --python python3 sync'
             }
         }
